@@ -1,0 +1,665 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Turing!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>Végtelen ciklus</title>
+        <para>
+            Írj olyan C végtelen ciklusokat, amelyek 0 illetve 100 százalékban dolgoztatnak egy magot és egy olyat, amely  
+            100 százalékban minden magot!
+        </para>
+        <para>
+            A feladat megoldásában segített: Boros István.
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Turing/blob/master/1a.c">https://github.com/Matchbox1233/Turing/blob/master/1a.c</link>
+        </para>
+        <programlisting language="c"><![CDATA[Végtelen ciklus egy magra 100% CPU:
+    #include <stdio.h>
+
+    int main()
+    {
+    
+        int a=1;
+        while (a=1)
+        {
+
+        }
+    
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Turing/blob/master/1b.c">https://github.com/Matchbox1233/Turing/blob/master/1b.c</link>
+        </para>
+        <programlisting language="c"><![CDATA[Végtelen ciklus egy magra 0% CPU:
+    #include <unistd.h>
+    int main ()
+    {
+        for (;;)
+         {
+          sleep (1);
+         }
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Turing/blob/master/1c.c">https://github.com/Matchbox1233/Turing/blob/master/1c.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Végtelen ciklus az összes magra 100% CPU:
+    #include <stdio.h>
+    #include <math.h>
+    int main()
+    {
+        unsigned int a= pow(2,32)-1;    
+        #pragma omp parallel for schedule(dynamic, 1)
+        for(unsigned int i=0;i<a;i++)
+        {
+            //printf("%d. Ez egy végtelen ciklus.\n",i);
+            if(i>200000000) i=0;
+        }
+        return 0;
+    }
+            ]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para> 
+            Egy olyan programot kell készítenünk, ami a végtelenségig fut. Ebben az esetben a "while" ciklus az egyik megoldás, de persze sok más módon is meg lehet oldani ezt a feladatot.
+        </para>
+        <para>
+            A "while" ciklus működése: Addig futattja le a ciklusmagban(a "{}" zárójel közötti rész) található kódot, amíg a feltétel(a "while" szó utáni zárójel) igaz. 
+        </para>
+        <para>
+            Először is megadunk egy "int" változót ami jelen esetben egy. Ezután a "while" ciklust. A "while" feltételébe beleírjuk hogy az "a" változónk egyenlő eggyel. Mivel a cikluslusmagban nem adtunk meg semmit, ezért a végtelenségig fog futni.
+	    </para>
+        <para>
+            A program lefordításánál megadhatjuk, hogy hány magot terheljen a program, ezt a "-lpthread" paranccsal tehetjük meg.
+        </para>
+        <para>
+            A terminálban a "htop" paranccsal tudjuk ellenőrizni, hogy az egyes processzormagok hány százalékon dolgoznak.
+        </para>
+	</section>        
+        
+    <section>
+        <title>Lefagyott, nem fagyott, akkor most mi van?</title>
+        <para>
+            Mutasd meg, hogy nem lehet olyan programot írni, amely bármely más programról eldönti, hogy le fog-e fagyni vagy sem!
+        </para>
+        <para>
+            Megoldás forrása:  tegyük fel, hogy akkora haxorok vagyunk, hogy meg tudjuk írni a <function>Lefagy</function>
+            függvényt, amely tetszőleges programról el tudja dönteni, hogy van-e benne végtelen ciklus:              
+        </para>
+        <programlisting language="c"><![CDATA[Program T100
+    {
+
+    	boolean Lefagy(Program P)
+    	{
+    		 if(P-ben van végtelen ciklus)
+    			return true;
+    		 else
+    			return false; 
+    	}
+
+    	main(Input Q)
+    	{
+    		Lefagy(Q)
+    	}
+    }
+]]></programlisting>            
+        <para>
+            A program futtatása, például akár az előző <filename>v.c</filename> ilyen pszeudókódjára:
+            <screen><![CDATA[T100(t.c.pseudo)
+true]]></screen>            
+            akár önmagára
+            <screen><![CDATA[T100(T100)
+false]]></screen>  
+            ezt a kimenetet adja.          
+        </para>
+        <para>
+            A T100-as programot felhasználva készítsük most el az alábbi T1000-set, amelyben a
+            Lefagy-ra épőlő Lefagy2 már nem tartalmaz feltételezett, csak csak konkrét kódot:
+        </para>
+        <programlisting language="c"><![CDATA[Program T1000
+{
+
+	boolean Lefagy(Program P)
+	{
+		 if(P-ben van végtelen ciklus)
+			return true;
+		 else
+			return false; 
+	}
+
+	boolean Lefagy2(Program P)
+	{
+		 if(Lefagy(P))
+			return true;
+		 else
+			for(;;); 
+	}
+
+	main(Input Q)
+	{
+		Lefagy2(Q)
+	}
+
+}]]></programlisting>            
+        <programlisting><![CDATA[]]></programlisting>            
+        <para>
+            Mit fog kiírni erre a <computeroutput>T1000(T1000)</computeroutput> futtatásra?
+                                
+            <itemizedlist>
+                <listitem>
+                    <para>Ha T1000 lefagyó, akkor nem fog lefagyni, kiírja, hogy true</para>                        
+                </listitem>
+                <listitem>
+                    <para>Ha T1000 nem fagyó, akkor pedig le fog fagyni...</para>                        
+                </listitem>
+            </itemizedlist>
+            akkor most hogy fog működni? Sehogy, mert ilyen <function>Lefagy</function>
+            függvényt, azaz a T100 program nem is létezik.                
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat: 
+        </para>
+        <para>
+            A feladat a megállási problémát mutatja be. A megállási probléma: el lehet e dönteni egy programról, hogy végtelen ciklusba kerül e. 1936-ban bebizonyították, hogy nem lehet ilyen programot írni, amely eldönti, hogy az adott program végtelen ciklusba kerül e, ezt Alan Turing bizonyította be. 
+        </para>
+    </section>    
+
+    <section>
+        <title>Változók értékének felcserélése</title>
+        <para>
+            Írj olyan C programot, amely felcseréli két változó értékét, bármiféle logikai utasítás vagy kifejezés
+            nasználata nélkül!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2018/08/28/10_begin_goto_20_avagy_elindulunk">https://bhaxor.blog.hu/2018/08/28/10_begin_goto_20_avagy_elindulunk</link>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Turing/blob/master/3.c">https://github.com/Matchbox1233/Turing/blob/master/3.c</link>
+        </para>
+        <programlisting language="c"><![CDATA[Két változó felcserélése:
+    #include <stdio.h>
+
+    int main()
+    {
+        int a=3, b=2;
+
+        printf("Eredeti: %i %i\n",a,b);
+
+        a=a+b;
+        b=a-b;
+        a=a-b;
+
+        printf("Csere: %i %i\n",a,b);
+
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A változók cseréje segédváltozó nélkül inkább egy matematikai feladat, mint sem egy programozói.
+        </para>
+        <para>
+            Először is adjunk meg két int változót aminek az értéke jelen esetben mindegy(de könnyebb kis számokkal számolni az ellenőrzésnél). Én ezeket a változókat megjelenítettem a kijelzőn, ezt a "printf" paranccsal tehetjük ezt meg. Utána elkezdtem leírni magát az algoritmust, ami a következő:
+        </para>
+        <para>
+            a=a+b ez annyit jelent, hogy az "a" változónhoz hozzáadtuk a "b" változó értékét, tehát az "a" értéke 5 lett(5=3+2).
+        </para>
+        <para>
+            b=a-b itt a "b" változó értéke fog megváltozni, hiszen az "a" változó már 5, tehát a "b" értéke 3 lett(3=5-2).
+        </para>
+        <para>
+            a=a-b végül megcserélődik a változó, hiszen az "a" változó értéke 2 lett 3 helyett, mivel 2=5-3(az előzőek által kiadott értékek szerint).
+        </para>
+    </section> 
+
+    <section>
+        <title>Labdapattogás</title>
+        <para>
+            Először if-ekkel, majd bármiféle logikai utasítás vagy kifejezés
+            nasználata nélkül írj egy olyan programot, ami egy labdát pattogtat a karakteres konzolon! (Hogy mit értek
+            pattogtatás alatt, alább láthatod a videókon.)
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2018/08/28/labdapattogas">https://bhaxor.blog.hu/2018/08/28/labdapattogas</link>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Turing/blob/master/4a.c">https://github.com/Matchbox1233/Turing/blob/master/4a.c</link>
+        </para>
+        <programlisting language="c"><![CDATA[Labdapattogtatás "if"-kel:
+    #include <stdio.h>
+    #include <curses.h>
+    #include <unistd.h>
+
+    int main ( void )
+    {
+        WINDOW *ablak;
+        ablak = initscr ();
+
+        int x = 0;  ///x és az y tengely
+        int y = 0;
+
+        int xnov = 1; //ekkora meredekséggel fog pattogni
+        int ynov = 1;
+
+        int mx;  ///a terminál ablak nagysága
+        int my;
+
+        for ( ;; ) 
+        {
+
+            getmaxyx ( ablak, my , mx );
+
+            mvprintw ( y, x, "O" );  //itt állíthatjuk át, hogy mi pattogjon
+                                     
+
+            refresh ();
+            usleep ( 100000 );  ///a pattogás gyorsaságát adja meg
+
+            x = x + xnov;  
+            y = y + ynov;
+
+            if ( x>=mx-1 ) 
+            { // elerte-e a jobb oldalt?
+                xnov = xnov * -1;
+            }
+            if ( x<=0 ) 
+            { // elerte-e a bal oldalt?
+                xnov = xnov * -1;
+            }
+            if ( y<=0 ) 
+            { // elerte-e a tetejet?
+                ynov = ynov * -1;
+            }
+            if ( y>=my-1 ) 
+            { // elerte-e a aljat?
+                ynov = ynov * -1;
+            }
+
+        }
+
+        return 0;
+    }       
+]]></programlisting> 
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A feladatot meg lehet oldani "if"-kel és "if"-ek nélkül is.
+        </para>
+        <para>
+            Először nézzük "if"-ek segítségével. Ahhoz, hogy a programunk helyesen leforduljon gépi nyelvre, be kell írnunk ezt egy terminálba, ami abban a mappában van megnyitva, ahol található a fenti kód. "sudo apt-get install libncurses5-dev" ez feltelepíti a cursese.h-t, amiből használunk pár dolgot. A fordításnál használni kell a sor végén a "-lncurses" kifejezést.
+        </para>
+        <para>
+            Kezdjünk bele! 
+        </para>
+        <para>
+            I. Megadjuk az "x" és az "y" tengelyeket, így létrejön egy koordináta rendszer, ahol a labda fog pattogni.
+        </para>
+        <para>
+            II. Megadjuk, hogy mekkora meredekséggel pattogjon. Ezeket a számokat lehet változtatni, és akkor a pattogás iránya befolyásolható.
+        </para>
+        <para>
+            III. A "for" cikulsban megadjuk az "if"-eket, amik azt a célt szolgálják, hogy a labda az adott terminálablakon kívülre ne pattogjon. Tehát, mielőtt a labda kipattogna a terminálból(negatív tartomány), akkor a program megszorozza -1-el a az x vagy az y tengelyet és így ennek hatására újra a pozitív irányba halad a pattogás.
+        </para>
+        <para>
+            A labda alakját lehet változtatni, például "0" helyett lehet "+" is vagy akár szavak is lehetnek. A labda pattogásának a gyorsaságát is lehet állítani, ha növeljük a számot, akkor lassul a pattogás, ha viszont csökkentjük, akkor gyorsulni fog.
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Turing/blob/master/4b.c">https://github.com/Matchbox1233/Turing/blob/master/4b.c</link>
+        </para>
+        <para>
+            A feladat megoldásában segített: Boros István.
+        </para>
+        <programlisting language="c"><![CDATA[Labdapattogtatás "if" nélkül:
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <unistd.h>
+
+    char bitzero(char x) 
+    {
+        int i;
+        char bitt = x&0x1;
+        for (i=0; i<8; i++) 
+        {
+            bitt |= (x>>i)&1;
+        }
+        return 1-bitt;
+    }
+
+    void rajzol(char width, char height) 
+    {
+        int i;
+        /*magasság*/
+        for (i=1; i<=height; i++) 
+        {
+            printf("\n");
+        }
+        /*szélesség*/
+        for (i=1; i<=width; i++) 
+        {
+            printf(" ");
+        }
+        printf("O\n");
+    }
+
+    int main() 
+    {
+        char x=1, y=1, vx=1, vy=1;
+        while(1) 
+        {
+            system("clear");
+            vx-=2*bitzero(79-x);    //balra pattanjon
+            vx+=2*bitzero(x);       //jobbra pattanjon
+            vy-=2*bitzero(24-y);    //lefele
+            vy+=2*bitzero(y);       //felfele
+            x+=vx;
+            y+=vy;
+            rajzol(x,y);
+            usleep(100000);
+        } 
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A kód három részből áll. Az első részben nullázunk egy változót. A második rész a "void". Ez a rész végzi a rajzolást. Itt állíthatjuk be, hogy mi pattogjon, ez lehet szöveg szám, vagy akármi. Az első "for" ciklus az "y" "tengely mentén lépteti a labdát(\n is mutatja), a második pedig az "x" tengely mentén. A harmadik rész pedig a fő rész a "main". Itt történik maga a pattogás, amit a "rajz" függvény kirajzol.
+        </para>
+    </section>  
+
+    <section>
+        <title>Szóhossz és a Linus Torvalds féle BogoMIPS</title>
+        <para>
+            Írj egy programot, ami megnézi, hogy hány bites a szó a gépeden, azaz mekkora az <type>int</type> mérete.
+            Használd ugyanazt a while ciklus fejet, amit Linus Torvalds a BogoMIPS rutinjában! 
+        </para>
+        <para>
+            A feladat megoldásában segített: Boros István.
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Turing/blob/master/5.c">https://github.com/Matchbox1233/Turing/blob/master/5.c</link>
+        </para>
+        <programlisting language="c"><![CDATA[Gépi szó:
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    int main()
+    {
+        int n=1;
+        int x=1;
+        while(x<<=1) n++;
+        printf("A gépi szó hossza: %d\n",n);
+        return 0;
+    }
+
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Az "int" mérete 32 bit a legtöbb esetben. A printf parancs segítségével kiíratjuk a terminálba a gépi szó hosszát. A hosszúság kiszámítására a "while" cuklust használjuk.
+        </para>
+    </section>    
+
+    <section>
+        <title>Helló, Google!</title>
+        <para>
+            Írj olyan C programot, amely egy 4 honlapból álló hálózatra kiszámolja a négy lap Page-Rank 
+            értékét!
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Turing/blob/master/6.c">https://github.com/Matchbox1233/Turing/blob/master/6.c</link>
+        </para>
+        <para>
+            A feladat megoldásában segített: Lovász Botond.
+        </para>
+        <programlisting language = "c"><![CDATA[Page-Rank:
+    #include <stdio.h>
+    #include <math.h>
+
+    void
+    kiir (double tomb[], int db)
+    {
+        
+        int i;
+        
+        for (i=0; i<db; ++i)
+        {
+            printf("%f\n",tomb[i]);
+        }
+    }
+
+    double
+    tavolsag (double PR[], double PRv[], int n)
+    {
+        
+        int i;
+        double osszeg=0;
+        
+        for (i = 0; i < n; ++i)
+            osszeg += (PRv[i] - PR[i]) * (PRv[i] - PR[i]);
+        
+        return sqrt(osszeg);
+    }
+
+    void
+    pagerank(double T[4][4])
+    {
+        double PR[4] = { 0.0, 0.0, 0.0, 0.0 }; //ebbe megy az eredmény
+        double PRv[4] = { 1.0/4.0, 1.0/4.0, 1.0/4.0, 1.0/4.0}; //ezzel szorzok
+        
+        int i, j;
+        
+        for(;;)
+        {
+            
+            // ide jön a mátrix művelet     
+            
+            for (i=0; i<4; i++)
+            {
+                PR[i]=0.0;
+                for (j=0; j<4; j++)
+                {
+                    PR[i] = PR[i] + T[i][j]*PRv[j];
+                }
+            }
+        
+                if (tavolsag(PR,PRv,4) < 0.0000000001) 
+                    break;
+            
+            // ide meg az átpakolás PR-ből PRv-be
+                
+                for (i=0;i<4; i++){
+                    PRv[i]=PR[i];
+                }   
+        }
+        
+        kiir (PR, 4);
+    }
+
+    int main (void)
+    {
+        double L[4][4] = 
+        {
+            {0.0,  0.0,      1.0/3.0,  0.0},
+            {1.0,  1.0/2.0,  1.0/3.0,  1.0},
+            {0.0,  1.0/2.0,  0.0,      0.0},
+            {0.0,  0.0,      1.0/3.0,  0.0}
+        };  
+        
+        double L1[4][4] = 
+        {
+            {0.0,  0.0,      1.0/3.0,  0.0},
+            {1.0,  1.0/2.0,  1.0/3.0,  0.0},
+            {0.0,  1.0/2.0,  0.0,      0.0},
+            {0.0,  0.0,      1.0/3.0,  0.0}
+        };
+        
+        double L2[4][4] = 
+        {
+            {0.0,  0.0,      1.0/3.0,  0.0},
+            {1.0,  1.0/2.0,  1.0/3.0,  0.0},
+            {0.0,  1.0/2.0,  0.0,      0.0},
+            {0.0,  0.0,      1.0/3.0,  1.0}
+        };
+        
+        printf("\nAz eredeti mátrix értékeivel történő futás:\n");
+        pagerank(L);
+        
+        printf("\nAmikor az egyik oldal semmire sem mutat:\n");
+        pagerank(L1);
+        
+        printf("\nAmikor az egyik oldal csak magára mutat:\n");
+        pagerank(L2);
+        
+        printf("\n");
+
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Page-Rank:
+        </para>
+        <para>
+            A Page-Rank egy olyan algoritmus, amely hiperlinkekkel összekötött dokumentumokhoz számokat rendel azoknak a hiperlink-hálózatban betöltött szerepe alapján. Minden weboldalnak számolja a hivatkozásait, és az adott lapra történő hivatkozásokat is, így állít sorrendet, mert minél több a hivatkozás, annál többen nézik az oldalt. Így rendezi a találatokat a keresésnél.
+        </para>
+        <para>
+            A kód ezt az éréket számolja(tavolsag), és kiírtaja az eredményt. 
+        </para>
+    </section>
+
+    <section xml:id="Brun">
+        <title>100 éves a Brun tétel</title>
+        <para>
+            Írj R szimulációt a Brun tétel demonstrálására!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://youtu.be/xbYhp9G6VqQ">https://youtu.be/xbYhp9G6VqQ</link>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Turing/blob/master/7.R">https://github.com/Matchbox1233/Turing/blob/master/7.R</link>
+        </para>
+        <programlisting language="r"><![CDATA[Brun tétel:
+    library(matlab)
+
+    stp <- function(x)
+    {
+        primes = primes(x)
+        diff = primes[2:length(primes)]-primes[1:length(primes)-1]
+        idx = which(diff==2)
+        firstnumber = primes[idx]
+        secondnumber = primes[idx]+2
+        rec= 1/t1primes+1/t2primes
+        return(sum(rec))
+    }
+
+    x=seq(13, 1000000, by=10000)
+    y=sapply(x, FUN = stp)
+    plot(x,y,type="b")
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Brun tétel:
+        </para>
+        <para>
+            A Brun tétel prímszámokkal foglalkozik. A tétel szerint az ikerprímek(olyan prímek melyek különbsége 2) reciprokösszege egy véges értékhez konvergál. Viszont a sima prímszámok a végtelenségig folytatódnak.
+        </para>
+        <para>
+            A program elkészítéséhez szükség lesz egy számoló programra. Ez a program az "R-base" névre hallgat. Ha elindítjuk a programot szükség lesz még egy matlab nevű programra is, ami a megjelenítést fogja elvégezni. Ennek a telepítése az "r" terminálában zajlik. Telepítő parancs: "install.packages(matlab)". A parancs lefutása után kell még egy parancs: "library(matlab)".
+        </para>
+        <para>
+            Létrehozzuk az "stp" nevű algoritmust, ezzel tudunk majd hivatkozni a programunkra.
+            Elsőnek egy vektorban(primes) eltároljuk az összes prímet(1.sor). Ezután eltoljuk a prímszámokat, úgy hogy a 2. elemtől kezdődjenek(primes[2:length(primes)]), és ebből kivonjuk azt az eltolást, amikor a prímszámoknak nem jelenítjük meg az utolsó elemét(primes[1:length(primes)-1]). A 3. sorban megvizsgáljuk a kivonást, ahol az eredmény 2 lesz, azt a helyet eltároljuk az "idx" nevű vektorban(így kapjuk meg az ikerprímeket). A 4.sor a számpárok első tagját, az 5.sor pedig a számpárok második tagját tartalmazzák. A 6.sorban a számoknak a reciprokát vesszük(elosztjuk őket eggyel) és ezt eltároljuk a "rec" nevű vektorban. A reciprokokat pedig össezeadjuk az utolsó sorban a "sum" függvény segítségével. 
+        </para>
+        <para>
+            A kód utolsó 3 sora pedig megjeleníti az ábrát, amit akkor kapunk ha lefutattjuk a programot.
+        </para>
+    </section>
+    
+    <section xml:id="bhax-textbook-feladatok-turing.MontyHall">
+        <title>A Monty Hall probléma</title>
+        <para>
+            Írj R szimulációt a Monty Hall problémára!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2019/01/03/erdos_pal_mit_keresett_a_nagykonyvben_a_monty_hall-paradoxon_kapcsan">https://bhaxor.blog.hu/2019/01/03/erdos_pal_mit_keresett_a_nagykonyvben_a_monty_hall-paradoxon_kapcsan</link>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Turing/blob/master/8.R">https://github.com/Matchbox1233/Turing/blob/master/8.R</link>
+        </para>
+        <programlisting language="r"><![CDATA[Monty Hall probléma:
+    kiserletek_szama=10000000
+    kiserlet = sample(1:3, kiserletek_szama, replace=T)  ///replace=T ==> ismétlődhet
+    jatekos = sample(1:3, kiserletek_szama, replace=T)  ///sample ==> végtelen szám gen
+    musorvezeto=vector(length = kiserletek_szama)
+
+    for (i in 1:kiserletek_szama) {
+
+        if(kiserlet[i]==jatekos[i]){
+        
+            mibol=setdiff(c(1,2,3), kiserlet[i])
+        
+        }else{
+        
+            mibol=setdiff(c(1,2,3), c(kiserlet[i], jatekos[i]))
+        
+        }
+
+        musorvezeto[i] = mibol[sample(1:length(mibol),1)]
+
+    }
+
+    nemvaltoztatesnyer= which(kiserlet==jatekos)
+    valtoztat=vector(length = kiserletek_szama)
+
+    for (i in 1:kiserletek_szama) {
+
+        holvalt = setdiff(c(1,2,3), c(musorvezeto[i], jatekos[i]))
+        valtoztat[i] = holvalt[sample(1:length(holvalt),1)]
+        
+    }
+
+    valtoztatesnyer = which(kiserlet==valtoztat)
+
+
+    sprintf("Kiserletek szama: %i", kiserletek_szama)
+    length(nemvaltoztatesnyer)
+    length(valtoztatesnyer)
+    length(nemvaltoztatesnyer)/length(valtoztatesnyer)
+    length(nemvaltoztatesnyer)+length(valtoztatesnyer)
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Monty Hall probléma:
+        </para>
+        <para>
+            A Monty Hall-paradoxon egy valószínüségi paradoxon, ami az Amerikai Egyesült Államokban futott "Let's Make a Deal" (Kössünk üzletet) című televíziós vetélkedőben. A nevét a vetélkedő műsorvezetőjéről, Monty Hallról kapta.
+        </para>
+        <para> 
+            A műsor végén mutatnak a játékosnak három ajtót. Kettő mögött egy-egy kecske, de a harmadik mögött egy új autó van. A játékos nyereménye az, ami az ő általa kiválasztott ajtó mögött van. Viszont a választás egy kicsit meg van bonyolítva. A játékos először csak rámutat az ajtóra mielőtt kinyitná, ezután a műsorveztő választ egy ajtót(a műsorvezető tudja, hogy melyik ajtó mögött mi van), majd megkérdezi a játékost, hogy szeretne e változtatni a döntésén. A játékos vagy változtat vagy nem , végül az ajtó kinyílik.
+        </para>
+        <para>
+            Elsőnek is megadjuk a kísérletek számát(első sor). A "kiserlet" nevű vektorban eltároljuk a nyertes ajtók számát(amik mögött kocsi van). A "jatekos" nevű vektorban meg eltároljukl, hogy a játékos melyik ajtót választotta. A "musorvezeto" vektorban eltároljuk a műsorvezető választását.
+        </para>
+        <para>
+            A forciklus a kísérletek számáig tart. Az "if"-ben azt határozzuk meg, ha a játékos első választásra eltalálja a nyereményt, akkor a műsorvezetőnek generálunk egy random számot(mert mindegy, hogy mit mond, hisz a játékos eltalálta a nyerő ajtót). Ha ez nem így van(else), akkor a három számból vegyük el azt a számot, amit a játékos választott, valamint azt is amit a műsorvezető választ. A második "for" ciklus azokat az eseteket vizsgálja, amikor a játékos változtat, és így kivesszük a három választásból a játékos, valamint a műsprvezető válaszát. MAjd megkpajuk azt is, amikor a játékos változtat, de nyer is. A végén meg kiírtajuk az eredményt.
+        </para>
+    </section>
+</chapter>                

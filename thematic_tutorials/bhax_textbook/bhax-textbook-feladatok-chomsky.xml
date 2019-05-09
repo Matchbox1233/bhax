@@ -1,0 +1,846 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Chomsky!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>Decimálisból unárisba átváltó Turing gép</title>
+        <para>
+            A feladat megoldásában segített: Fürjes Benke Péter.
+        </para>
+        <para>
+            Állapotátmenet gráfjával megadva írd meg ezt a gépet!
+        </para>
+        <para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="Pictures/Turing_gep.png" scale="50"/>
+            </imageobject>
+        </mediaobject>
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Turing gép: Alan Turing angol matematikus dolgozta ki 1936-ban. A gép az akkoriban még nem létező számítógépek működésést modellezte. Három hardveres egységből állt: szalagtár(memória és input-output perifériák), vezérlőegységből(CPU), és az író olvasó fejből. 
+        </para>
+        <para>
+            Az unáris számreednszer csak egyeseket tartalmaz(pl: 4=1111). A gép a decimális alakaban megadott számokat váltja át unárissá.
+        </para>
+        <para>
+            Az átváltás folyamata a következő. A gép minden egyes számot egyesével csökkent, addig amíg el nem éri a nullát,ezeket az egyeseket tárolja el a gép, és a végén ezt kapjuk eredményül.
+        </para>
+        <para>
+            A számok átváltását az utolsó számjegytől kezdjük, ha ez nulla, akkor kilenccel megyünk a kék állapotban, mindig levonunk egyet, addig, amíg el nem erjük a nullát. Annyi egyest tárolunk el, ahányszor a műveletet elvégeztük.
+        </para>
+
+    </section>        
+        
+    <section>
+        <title>Az a<superscript>n</superscript>b<superscript>n</superscript>c<superscript>n</superscript> nyelv nem környezetfüggetlen</title>
+        <para>
+            Mutass be legalább két környezetfüggő generatív grammatikát, amely ezt a nyelvet generálja!
+        </para>
+        <para>
+            Megoldás forrása:                
+        </para>
+        <programlisting><![CDATA[I. Környzetfüggő grammatika:
+    Szabályok:
+        S-->aBSc
+        S-->abc
+        Ba-->aB
+        Bb-->bb
+
+    Példa:
+        S --> aBSc --> aBaBScc --> aBaBabccc --> aaBBabccc --> aaBaBbccc --> aaaBBbccc --> aaaBbbccc --> aaabbbccc
+]]></programlisting>
+        <programlisting><![CDATA[II. Környezetfüggő grammatika:
+    Szabályok:
+        S-->abc
+        S-->aXbc
+        Xb-->bX
+        Xc-->Ybcc
+        bY-->Yb
+        aY-->aaX
+        aY-->aa
+
+    Példa:
+        S --> aXbc --> abXc --> abYbcc --> aYbbcc --> aaxbbcc --> aabXbcc --> aabbXcc --> aabbYbccc --> aabYbbccc --> aaYbbbccc --> aaabbbccc
+            ]]></programlisting>
+
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A generatív nyelvtan elméletetet és a Chomsky-hierarchiát Noam Chomsky dolgozta ki.
+            A generatív nyelvelmélet célja: olyan modell létrhezása, amelynek a segítségével végtelen számú mondatot alkothatunk. 
+        </para>
+    </section>        
+                
+    <section>
+        <title>Hivatkozási nyelv</title>
+        <para>
+            A <citation>KERNIGHANRITCHIE</citation> könyv C referencia-kézikönyv/Utasítások melléklete alapján definiáld 
+            BNF-ben a C utasítás fogalmát!
+            Majd mutass be olyan kódcsipeteket, amelyek adott szabvánnyal nem fordulnak (például C89), mással (például C99) igen.
+        </para>
+        <para>
+            Megoldás forrása:  
+        </para>
+        <programlisting><![CDATA[C utasítás BNF-ben:
+
+    <labeled-statement> ::= <identifier> : <statement>
+                | case <constant-expression> : <statement>
+                | default : <statement>
+
+    <selection-statement> ::= if ( <expression> ) <statement>
+                | if ( <expression> ) <statement> else <statement>
+                | switch ( <expression> ) <statement>
+
+    <iteration-statement> ::= while ( <expression> ) <statement>
+                | do <statement> while ( <expression> ) ;
+                | for ( {<expression>}? ; {<expression>}? ; {<expression>}? ) <statement>
+
+    <jump-statement> ::= goto <identifier> ;
+                | continue ;
+                | break ;
+                | return {<expression>}? ;
+
+]]></programlisting>
+         <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Maga a BNF(Backus-Naur-forma) az a számítógépek programozási nyelveinek nyelvtanának leírása, ideértve az utasítás készleteket és a kommunikációs protokollokat is, valamint az egyes természetes nyelvek nyelvtanát. Számos programozási nyelv elméleti leírása és/vagy szemantikai dokumentumai általában BNF-ban vannak leírva.
+        </para>
+        <para>
+            A szabály bal oldala azt mutatja meg, hogy mivel/mikkel helytesíthető a jobb oldalon álló szimbólum. Az a szimbólum, amely soha nem bukkan fel szabály bal oldalán, az úgynevezett terminális.
+        </para>
+        <para> 
+            Megoldás forrása:
+        </para>
+        <programlisting language = "c"><![CDATA[C89 és C99 különbség:
+    # include <stdio.h>
+    int main()
+    {
+        long int a=987654321;
+        for (int i = 0; i < a; ++i)
+        {
+            printf("Hello World!\n");
+        }
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A program addig íja ki a képernyőre a "Hello World"-t, amíg a "long int" tart. A különbség a C89 és a C99 között, hogy még C89-ben nem fordulna le ez a program, mert ott még nem lehetett a "for" ciklus ciklusfejébe ciklusváltozót deklarálni, de a C99-ben már lehet.
+        </para> 
+    </section>                     
+
+    <section>
+        <title>Saját lexikális elemző</title>
+        <para>
+            Írj olyan programot, ami számolja a bemenetén megjelenő valós számokat! 
+            Nem elfogadható olyan megoldás, amely maga olvassa betűnként a bemenetet, 
+            a feladat lényege, hogy lexert használjunk, azaz óriások vállán álljunk és ne kispályázzunk!
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Chomsky/blob/master/4.c">hhttps://github.com/Matchbox1233/Chomsky/blob/master/4.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Számokat számoló lexikális elemző:
+    %{
+    #include <stdio.h>
+    int szamok=0;
+    %}
+
+    %option noyywrap
+
+    %%
+    [[:digit:]]+  //legalább egy számjegy egymás után
+    {
+        szamok++;
+    }
+
+    [[:alpha:]][[:print:]]*   
+    %%
+
+    int main(void)
+    {
+        yylex();
+        printf("%d számot talált a lexer: \n",szamok);
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A porgramhárom részből áll. Az első részben(%{-%}) létrehozunk egy "int" típusú változót  "szamok" néven, amiben altároljuk a lexer által észlelt számokat. A második részben(%%-%%) Megadjuk a lexernek, hogy az egyes mintákra, hogyan reagáljon. Ha a "digit" legalább egy számjegyet talál egymás után, akkor eggyel növeli a számlálót, de ha nem talál ilyen számjegyet, akkor ne csináljon semmit. A  harmadik részben(int main) meghívjuk a lexert, a "yylex" fügvénnyel, ami véigfutattja a bemenetet. Majd a program végén a "printf" -el kiíratjuk a számláló érékét.
+        </para>
+    </section>                      
+
+    <section>
+        <title>l33t.l</title>
+        <para>
+            Lexelj össze egy l33t ciphert!
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Chomsky/blob/master/5.c">hhttps://github.com/Matchbox1233/Chomsky/blob/master/5.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Leet cipher:
+    %{
+        #include <stdio.h>
+        #include <ctype.h>
+        #include <string.h>
+        #include <time.h>
+        #include <stdlib.h>
+        int x=0;
+        typedef struct{
+            char c;
+            char *d[6];
+        } cipher;
+        cipher L337[] = {
+            {'a',{"4","/-\\","a","/\\","a","a"}},
+            {'b',{"!3","|3","8","ß","b","b"}},
+            {'c',{"[","<","{","c","c","c"}},
+            {'d',{"|}","d","|>","T)","d","d"}},
+            {'e',{"3","&","e","€","e","e"}},
+            {'f',{"|=","|#","/=","f","f","f"}},
+            {'g',{"&","6","g","(_+","g","g"}},
+            {'h',{"|-|",")-(","[-]","h","h","h"}},
+            {'i',{"1","[]","!","|","i","i"}},
+            {'j',{"_|",";","1","j","j","j"}},
+            {'k',{">|","1<","|c","k","k","k"}},
+            {'l',{"1","|_","l","|","l","l"}},
+            {'m',{"/\\/\\","/V\\","[V]","m","m","m"}},
+            {'n',{"</>","n","|\\|","^/","n","n"}},
+            {'o',{"0","Q","o","<>","o","o"}},
+            {'p',{"|*","|>","p","|7","p","p"}},
+            {'q',{"(_,)","q","9","&","q","q"}},
+            {'r',{"I2","|?","Iz","r","r","r"}},
+            {'s',{"s","5","z","§","s","s"}},
+            {'t',{"4","-|-","7","t","t","t"}},
+            {'u',{"(_)","u","v","L|","u","u"}},
+            {'v',{"v","\\/","|/","\\|","v","v"}},
+            {'w',{"\\/\\/","w","\\x/","\\\\//\\\\//","w","w"}},
+            {'x',{"4","}{","><","x","x","x"}},
+            {'y',{"y","j","`/","\\|/","y","y"}},
+            {'z',{"2","-/_","z",">_","z","z"}},
+
+            {'1',{"I","1","L","I"}},
+            {'2',{"R","2","2","Z"}},
+            {'3',{"E","3","E","3"}},
+            {'4',{"4","A","A","4"}},
+            {'5',{"S","5","S","5"}},
+            {'6',{"b","6","G","6"}},
+            {'7',{"7","7","L","T"}},
+            {'8',{"8","B","8","B"}},
+            {'9',{"g","q","9","9"}},
+            {'0',{"0","()","[]","0"}},
+        };
+
+    %}
+    %option noyywrap
+    %%
+    \n  {
+            printf("\n");
+        }
+    .   {
+            srand(time(0)+x++);
+            char c = tolower(*yytext);
+
+            int i=0;
+            while(i<36 && L337[i++].c!=c); 
+            if(i<36)
+            {
+                char *s=L337[i-1].d[rand()%6];
+                printf("%s",s);
+            }
+            else 
+            {
+                printf("%c",c);
+            }
+
+        }
+    %%
+
+    int main()
+    {
+        yylex();
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Mi is az a Leet?
+        </para>
+        <para>
+            A Leet lényege, hogy az írott szöveg betűit más számokkal és más ASCII karakterekkel helyettesítik.  Ennek a célja a titkosítás volt. Az interenten zárt közösségek használták, hogy mások ne értsék, hogy ők miről bezélgetnek, írnak, stb.
+        </para>
+        <para>
+            A programot fel tudjuk osztani három főbb részre. Az első rész taralmazza az "include"-kat, egy "int" típusú változót, amely a random számok generálásához kell. Az első rész tartalmazz a program alapját, ez a chiper típusú tömb. Ebben a tömbben adjuk meg, hogy a számokat, és a betűket milyen karakterek helyetesítsék. Az esetek többségében három kódolt betűt, és négy eredeti betűt, hogy ne legyen minden betű átalakítva.
+        </para>
+        <para>
+            A másdoki nagyobb résznek a feldata, hogy a program átalakítja az eredti karaktereket, a megadottakra. Ezt a folyamatot, úgy végzi, hogy a lexer által beolvasott karaktereket megnézni a tömbben, ha egyezést talál, akkor random választ egyet a megadottakból, és kicsérli. Ha nem talál egyezést, akkor az eredeti karaktert meghagyja.
+        </para>
+        <para>
+            A harmadik rész(int main), ez a program fő része.  Ebben a részben a program meghívja a lexert, az "yylex" fügvénnyel. Ha a program sikersen lefut, akkor nullát ad vissza az operációs rendszernek, ezzel jelzi, hogy sikeres volt a program lefutatása.
+        </para>
+    </section>                     
+
+
+    <section>
+        <title>A források olvasása</title>
+        <para>
+            Hogyan olvasod, hogyan értelmezed természetes nyelven az alábbi kódcsipeteket? Például
+            <programlisting><![CDATA[if(signal(SIGINT, jelkezelo)==SIG_IGN)
+    signal(SIGINT, SIG_IGN);]]></programlisting>
+            Ha a SIGINT jel kezelése figyelmen kívül volt hagyva, akkor ezen túl is legyen
+            figyelmen kívül hagyva, ha nem volt figyelmen kívül hagyva, akkor a jelkezelo függvény
+            kezelje. (Miután a <command>man 7 signal</command> lapon megismertem a SIGINT jelet, a
+            <command>man 2 signal</command> lapon pedig a használt rendszerhívást.)
+        </para>
+
+        <caution>
+            <title>Bugok</title>
+            <para>
+                Vigyázz, sok csipet kerülendő, mert bugokat visz a kódba! Melyek ezek és miért? 
+                Ha nem megy ránézésre, elkapja valamelyiket esetleg a splint vagy a frama?
+            </para>
+        </caution>
+            
+        <orderedlist numeration="lowerroman">
+            <listitem>                                    
+                <programlisting><![CDATA[if(signal(SIGINT, SIG_IGN)!=SIG_IGN)
+    signal(SIGINT, jelkezelo);]]></programlisting>
+            </listitem>
+            <listitem>  
+
+                <programlisting><![CDATA[for(i=0; i<5; ++i)]]></programlisting>            
+            
+            </listitem>
+            <listitem>                                    
+            
+                <programlisting><![CDATA[for(i=0; i<5; i++)]]></programlisting>            
+            
+            </listitem>
+            <listitem>                                    
+            
+                <programlisting><![CDATA[for(i=0; i<5; tomb[i] = i++)]]></programlisting>          
+            
+            </listitem>
+            <listitem>                                    
+
+                <programlisting><![CDATA[for(i=0; i<n && (*d++ = *s++); ++i)]]></programlisting>            
+            </listitem>
+            <listitem>                                    
+
+                <programlisting><![CDATA[printf("%d %d", f(a, ++a), f(++a, a));]]></programlisting>            
+            </listitem>
+            <listitem>                                    
+
+                <programlisting><![CDATA[printf("%d %d", f(a), a);]]></programlisting>            
+            </listitem>
+            <listitem>                                    
+
+                <programlisting><![CDATA[printf("%d %d", f(&a), a);]]></programlisting>            
+            </listitem>
+        </orderedlist>
+         <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Chomsky/blob/master/6.c">https://github.com/Matchbox1233/Chomsky/blob/master/6.c</link>
+        </para>
+        <programlisting><![CDATA[Eredeti program, ebbe kell beilleszteni a kódrészleteket:
+    #include <stdio.h>
+    #include <signal.h>
+
+
+    void jelkezelo(int sig)
+    {
+        printf("Off %d\n",sig);
+    }
+    int main () {
+    for(;;){
+        if(signal(SIGINT, jelkezelo)==SIG_IGN)
+           signal(SIGINT, SIG_IGN);
+        }
+    return 0;
+    }
+
+            ]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Az alap program magyarázata:
+        </para>
+        <para>
+            Olyan végtelen cklust késztettünk, amiből nem lehet kilépni, még a "ctrl+c" segítségével sem.
+        </para>
+        <para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="Pictures/alap.png" scale="50"/>
+            </imageobject>
+        </mediaobject>
+        </para>
+        <para>
+            I.-II. A "for" ciklus addig fut, amíg az "i" kisebb, mint öt.
+        </para>
+        <para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="Pictures/1-2.png" scale="50"/>
+            </imageobject>
+        </mediaobject>
+        </para>
+        <para>
+            III. A "for" ciklus addig fog futni, amíg az "i" kisebb, mint öt, és a tömb minden elemét egyenlővé teszi "i"-vel
+        </para>
+        <para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="Pictures/3.png" scale="50"/>
+            </imageobject>
+        </mediaobject>
+        </para>
+        <para>
+            IV. A "for" ciklus addig fog futni, amíg "*d++" egynlő tud lenni az "s++"-al. Viszont ha az "n" értéke nagyobb, mint az "*s" vagy "*d" értéke, akkor a program nem fog működi.
+        </para>
+        <para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="Pictures/4.png" scale="50"/>
+            </imageobject>
+        </mediaobject>
+        </para>
+        <para>
+            V. A "printf" függvénnyel kiíratjuk először az "a+a+1"-t, a másodiknál pedig"(a+1)*2"
+        </para>
+        <para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="Pictures/5.png" scale="50"/>
+            </imageobject>
+        </mediaobject>
+        </para>
+        <para>
+            VI-VII. Először kiíratjuk, hogy az "f" milyen módon értékeli, ki az "a"-t, utána meg kiíratjuk az eredeti "a"-t. Ne írjunk olyan kódot, ami bármilyen értelemben feltételez egy kiértékelési sorrendet! 
+        </para>
+        <para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="Pictures/6-7.png" scale="50"/>
+            </imageobject>
+        </mediaobject>
+        </para>
+    </section>                     
+
+    <section>
+        <title>Logikus</title>
+        <para>
+            Hogyan olvasod természetes nyelven az alábbi Ar nyelvű formulákat?
+        </para>
+        <programlisting language="tex"><![CDATA[$(\forall x \exists y ((x<y)\wedge(y \text{ prím})))$ 
+
+$(\forall x \exists y ((x<y)\wedge(y \text{ prím})\wedge(SSy \text{ prím})))$ 
+
+$(\exists y \forall x (x \text{ prím}) \supset (x<y)) $ 
+
+$(\exists y \forall x (y<x) \supset \neg (x \text{ prím}))$
+]]></programlisting>        
+        <para>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/blob/master/attention_raising/MatLog_LaTeX">https://gitlab.com/nbatfai/bhax/blob/master/attention_raising/MatLog_LaTeX</link>
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://youtu.be/ZexiPy3ZxsA">https://youtu.be/ZexiPy3ZxsA</link>, <link xlink:href="https://youtu.be/AJSXOQFF_wk">https://youtu.be/AJSXOQFF_wk</link>
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            I.jelentése: Minden számnál van nagyobb prímszám.
+        </para>
+        <para>
+            II.jelentése: Minden számnál van nagyobb iker prímszám pár.
+        </para>
+        <para>
+            III.jelentése: Minden prímszámnál van nagyobb prímszám.
+        </para>
+        <para>
+            IV.jelentése: Ha az egyik számnál nagyobb a másik, akkor az nem prím(ha ebben az esetben végesnek tekintjük a prímeket).
+        </para>
+    </section>                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+    <section>
+        <title>Deklaráció</title> 
+        <para>
+            Vezesd be egy programba (forduljon le) a következőket: 
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>egész</para>                        
+            </listitem>
+            <listitem>
+                <para>egészre mutató mutató</para>                        
+            </listitem>
+            <listitem>
+                <para>egész referenciája</para>                        
+            </listitem>
+            <listitem>
+                <para>egészek tömbje</para>                        
+            </listitem>
+            <listitem>
+                <para>egészek tömbjének referenciája (nem az első elemé)</para>       
+            </listitem>
+            <listitem>
+                <para>egészre mutató mutatók tömbje</para>                        
+            </listitem>
+            <listitem>
+                <para>egészre mutató mutatót visszaadó függvény</para>                        
+            </listitem>
+            <listitem>
+                <para>egészre mutató mutatót visszaadó függvényre mutató mutató</para>                        
+            </listitem>
+            <listitem>
+                <para>egészet visszaadó és két egészet kapó függvényre mutató mutatót visszaadó, egészet kapó függvény</para>                        
+            </listitem>            
+            <listitem>
+                <para>függvénymutató egy egészet visszaadó és két egészet kapó függvényre mutató mutatót visszaadó, egészet kapó függvényre</para>                        
+            </listitem>            
+        </itemizedlist>            
+
+       <para>
+            Mit vezetnek be a programba a következő nevek?
+        </para>
+
+        <itemizedlist>
+            <listitem>
+                <programlisting><![CDATA[int a;]]></programlisting>            
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int *b = &a;]]></programlisting>            
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int &r = a;]]></programlisting>            
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int c[5];]]></programlisting>            
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int (&tr)[5] = c;]]></programlisting>            
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int *d[5];]]></programlisting>            
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int *h ();]]></programlisting>            
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int *(*l) ();]]></programlisting>            
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int (*v (int c)) (int a, int b)]]></programlisting>            
+            </listitem>            
+            <listitem>
+                <programlisting><![CDATA[int (*(*z) (int)) (int, int);]]></programlisting>            
+            </listitem>            
+        </itemizedlist>  
+        <para>
+            A feladat megoldásában segített: Boros István.
+        </para>     
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Chomsky/blob/master/8a.c">https://github.com/Matchbox1233/Chomsky/blob/master/8a.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Egész:
+
+    #include <stdio.h>
+
+    int main()
+    {
+        int a;
+        printf("%d\n",a);
+
+        int b=10;
+        printf("%d\n",b); //%d egész számot jelöl(decimális)
+
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Megadunk egy int típusú változót. Ha ennek nem adunk értéket, akkor nullát kapunk vissza, ha adnunk neki értéket, akkor azt az értéket kapjuk vissza kiíratáskor.
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Chomsky/blob/master/8b.c">https://github.com/Matchbox1233/Chomsky/blob/master/8b.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Egészre mutató mutató:
+
+    #include <stdio.h>
+
+    int main()
+    {
+        int a=5;
+        int *b = &a;
+
+        printf("%d\n",*b);
+
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Megadunk egy int típusú "a" változót, amit eltárolunk "*b" pointerben(ez egy mutató). Így ha kiíratjuk "*b"-t akkor ötöt fogunk kapni, mert a "*b" öt lett, mivel az mutat az "a"-ra.
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Chomsky/blob/master/8c.cpp">https://github.com/Matchbox1233/Chomsky/blob/master/8c.cpp</link>
+        </para>
+        <programlisting language = "c++"><![CDATA[Egész referenciája:
+
+    #include <stdio.h>
+
+    int main()
+    {
+        int a=5;
+        int &r = a;
+
+        printf("%d\n",r);
+
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Megadunk egy "a" változót, aminek az értéket öt. A következő sorban megadunk egy "r" opertátort, ami "a"-ra mutat, és így az "r" kiíratásánál megkapjuk az "a" értékét.
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Chomsky/blob/master/8d.c">https://github.com/Matchbox1233/Chomsky/blob/master/8d.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Egészek tömbje:
+
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <time.h>
+
+    int main() 
+    {
+      int c[5];
+      int i;
+      srand(time(NULL));
+
+      for(i=0;i<5;i++)
+      {
+        c[i]=rand()%100+1;
+      }
+
+      for(i=0;i<5;i++)
+      {
+        printf("%d\n",c[i]);
+      }
+
+      return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Létrehozunk egy "int" típusú "c" nevű öt elemű tömböt. A "[]" zárójelbe írjuk, hogy mennyi elemet akarunk benne eltárolni. A kód többi része, annyit jelent, hogy ebbe a tömbbe generálunk random számokat 0-100 között(első "for" ciklus). Majd kiíratjuk őket(második "for" ciklus).
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Chomsky/blob/master/8e.cpp">https://github.com/Matchbox1233/Chomsky/blob/master/8e.cpp</link>
+        </para>
+        <programlisting language = "c++"><![CDATA[Egészek tömbjének referenciája (nem az első elemé):
+
+    #include <stdio.h>
+
+    int main() 
+    {
+      int a = 5;
+      int &r = a;
+      int c[5];
+      int (&tr) [5] = c;
+      printf("%d\n",&tr);
+
+      return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A kód az előző kódokon alapszik. Csak itt egy kicsit bővül, azzal hogy a "tr" mutat a "c"-re. A kiíratáskor(printf) megkpajuk a tömb referebciaértékét.
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Chomsky/blob/master/8f.c">https://github.com/Matchbox1233/Chomsky/blob/master/8f.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Egészre mutatók mutatók tömbje:
+
+    #include <stdio.h>
+
+    int main() 
+    {
+      int *d[5];
+      int c=**d;
+      printf("%d %d\n",**d,c);
+
+      return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A "*d" egy egészekre mutató tömb. Megadjuk a "c" változót, amiben eltároljuk a "*d" első elemét(ez a **d). Végül a "printf" függvény segítségével kiíratjuk az első elemét a "*d" tömbnek, és így ellenőrizzük, hogy a "c" is azt adja vissza.
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Chomsky/blob/master/8g.c">https://github.com/Matchbox1233/Chomsky/blob/master/8g.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Egészre mutató mutató visszaadó függvény:
+
+    #include <stdio.h>
+    #include <stdlib.h>
+    
+    int *h ()
+    {
+      return (int*) malloc(sizeof(int)); 
+    }
+
+    int main() 
+    {
+      printf("%p\n",h());
+
+      return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Létrehozunk egy mutató függvényt(*h), amiben a "malloc" lefoglal egy "int" méretű részt a memóriából(32 bit), amit a "return"-nek át kell konvertálnia "int*" típusra.
+            A "main" részben pedig kiíratjuk a "printf" segítségévvel a lefoglalt memóriacímet.
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Chomsky/blob/master/8h.c">https://github.com/Matchbox1233/Chomsky/blob/master/8h.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Egészre mutató mutató visszaadó függvényre mutató mutató:
+
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    int *h()
+    {
+        return (int*) malloc(sizeof(int));
+    }
+
+    int main()
+    {
+        int *(*l) () = h;
+        printf("%p\n",l();
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Az előző feladatra építkezve létrehozzuk az "l" mutató függvényt, amiben hivatkozunk a "h"-ra. Végül pedig kiíratjuk a "*h" függvényben lefoglalt memóriacímet.
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Chomsky/blob/master/8i.c">https://github.com/Matchbox1233/Chomsky/blob/master/8i.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Egészet visszaadó és két egészet kapó függvényre mutató mutatót visszaadó, egészet kapó függvény:
+
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    int sum(int a,int b)
+    {
+        return a+b;
+    }
+
+    int mul(int a, int b)
+    {
+        return a*b;
+    }
+
+    int (*asd(int c))()
+    {
+        if(c) return sum;
+        else return mul;
+    }
+
+    int (*v(int c))()
+    {
+        return asd(c);
+    }
+
+    int main()
+    {
+        printf("%d\n",v(0)(5,5));
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Létrehozunk egy szorzás(int mul) és egy összeg(int sum) függvényt. A kód úgy működik, hogy a 4. "int"-ben a "c"-t visszaküldjük az előtte lévő "int" -be(3. int), ott a program eldönti, hogy a "c" nulla e, mert ha nulla akkor a sorzáshoz, tér vissza az érték, ha pedig nullától különböző(lehet negatív is) akkor az összaadáshoz tér vissza a "c" értéke. Ezután megint visszatérünk a 4."int"-be, ahol a "*v" fog mutatni a "c"-re, és inenn fog tovább menni a "main"-be, ahol kiíratjuk az értékét.
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Chomsky/blob/master/8j.c">https://github.com/Matchbox1233/Chomsky/blob/master/8j.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Függvénymutató egy egészet visszaadó és két egészet kapó függvényre mutató mutatót visszaadó, egészet kapó függvényre:
+            
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    int sum(int a,int b)
+    {
+        return a+b;
+    }
+    int mul(int a, int b)
+    {
+        return a*b;
+    }
+
+    int (*asd(int c))()
+    {
+        if(c) return sum;
+        else return mul;
+    }
+
+    int (*v(int c))()
+    {
+        return asd(c);
+    }
+
+    int main()
+    {
+        int *(z(int))(int, int) = v;
+        printf("%d\n",z(0)(5,5));
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Létrehozunk egy szorzás(int mul) és egy összeg(int sum) függvényt. A kód úgy működik, hogy a 4. "int"-ben a "c"-t visszaküldjük az előtte lévő "int" -be(3. int), ott a program eldönti, hogy a "c" nulla e, mert ha nulla akkor a sorzáshoz, tér vissza az érték, ha pedig nullától különböző(lehet negatív is) akkor az összaadáshoz tér vissza a "c" értéke. Ezután megint visszatérünk a 4."int"-be, ahol a "*v" fog mutatni a "c"-re, és inenn fog tovább menni a "main"-be, ahol létrehozunk egy "*z"-t, ami a "v" értékére fog hivatkozni. Így a "printf"-ben a "z"-t fogjuk kiíratni.
+        </para>
+
+    </section>                     
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                

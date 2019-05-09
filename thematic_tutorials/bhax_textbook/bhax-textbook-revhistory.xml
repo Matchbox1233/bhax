@@ -1,0 +1,125 @@
+<revhistory xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <revision>
+        <revnumber>0.0.1</revnumber>
+        <date>2019-02-12</date>
+        <authorinitials>nbatfai</authorinitials>
+        <revremark>
+            Az iniciális dokumentum szerkezetének kialakítása.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.0.2</revnumber>
+        <date>2019-02-14</date>
+        <authorinitials>nbatfai</authorinitials>
+        <revremark>
+            Inciális feladatlisták összeállítása.
+        </revremark>
+    </revision>    
+    <revision>
+        <revnumber>0.0.3</revnumber>
+        <date>2019-02-16</date>
+        <authorinitials>nbatfai</authorinitials>
+        <revremark>
+            Feladatlisták folytatása.
+            Feltöltés a BHAX csatorna 
+            <link xlink:href="https://gitlab.com/nbatfai/bhax">https://gitlab.com/nbatfai/bhax</link>
+            repójába.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.0.4</revnumber>
+        <date>2019-02-19</date>
+        <authorinitials>nbatfai</authorinitials>
+        <revremark>
+            Aktualizálás, javítások.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.1.0</revnumber>
+        <date>2019-02-22</date>
+        <authorinitials>Nyitrai Dávid</authorinitials>
+        <revremark>
+            Az első fejezet elkészült.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.2.0</revnumber>
+        <date>2019-03-08</date>
+        <authorinitials>Nyitrai Dávid</authorinitials>
+        <revremark>
+            A második fejezet elkészült.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.3.0</revnumber>
+        <date>2019-03-10</date>
+        <authorinitials>Nyitrai Dávid</authorinitials>
+        <revremark>
+            Az olvasónapló csatolása.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.4.0</revnumber>
+        <date>2019-03-15</date>
+        <authorinitials>Nyitrai Dávid</authorinitials>
+        <revremark>
+            A harmadik fejezet elkészült.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.5.0</revnumber>
+        <date>2019-03-22</date>
+        <authorinitials>Nyitrai Dávid</authorinitials>
+        <revremark>
+            A negyedik fejezet elkészült.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.5.0</revnumber>
+        <date>2019-03-05</date>
+        <authorinitials>Nyitrai Dávid</authorinitials>
+        <revremark>
+            Az ötödik fejezet elkészült.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.6.0</revnumber>
+        <date>2019-04-12</date>
+        <authorinitials>Nyitrai Dávid</authorinitials>
+        <revremark>
+            A hatodik fejezet elkészült.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.7.0</revnumber>
+        <date>2019-04-26</date>
+        <authorinitials>Nyitrai Dávid</authorinitials>
+        <revremark>
+            A hetedik fejezet elkészült.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.8.0</revnumber>
+        <date>2019-05-03</date>
+        <authorinitials>Nyitrai Dávid</authorinitials>
+        <revremark>
+            A nyolcadik fejezet elkészült.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.8.1</revnumber>
+        <date>2019-05-08</date>
+        <authorinitials>Nyitrai Dávid</authorinitials>
+        <revremark>
+            Javítások, kiegészítések.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>1.0.0</revnumber>
+        <date>2019-05-08</date>
+        <authorinitials>Nyitrai Dávid</authorinitials>
+        <revremark>
+            Első kiadás.
+        </revremark>
+    </revision>
+</revhistory>

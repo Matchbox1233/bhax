@@ -1,0 +1,494 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Caesar!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title><type>double **</type> háromszögmátrix</title>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Caesar/blob/master/1.c">https://github.com/Matchbox1233/Caesar/blob/master/1.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Alsó háromszögmátrix: 
+    
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    int main()
+    {
+        int num_rows = 5;
+        double **tm = (double**) malloc(sizeof(double*)*num_rows);
+
+        for(int i=0;i<num_rows;i++)
+        {
+            tm[i]=(double*) malloc(sizeof(double)*(i+1));
+        }
+        
+        int k=0;
+
+        for(int i=0;i<num_rows;i++)  //leképezés
+        {
+            for(int j=0;j<i+1;j++)
+            {
+                tm[i][j]=k++;
+            }
+        }
+        for(int i=0;i<num_rows;i++)  //kiíratás
+        {
+            for(int j=0;j<i+1;j++)
+            {
+                printf("%lf ",tm[i][j]);
+            }
+            printf("\n");
+        }
+        for(int i=0;i<num_rows;i++)  //memóriacímek felszabadítása
+        {
+            free(tm[i]);
+        }
+
+        free(tm);
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A program elején megadjuk, hogy hány sora lesz a mátrixnak(int num_rows = 5;) A második sorban lefoglal a program 40 byte-ot a "malloc és sizeof" segítségével(malloc a sizeof-al 8byte-ot jelent az num_rows pedig 5byte-ot, és így lesz 40). Majd a "k" nullától minden elemnek 1.1-es leképezéssel adjuk a "k" -t. Utána kiíratjuk a terminálba az eredményt, végül felszabadítjuk a poniterekkel lefoglalt memóriacímeket.
+        </para>            
+    </section>        
+    <section>
+        <title>C EXOR titkosító</title>
+        <para>
+            Írj egy EXOR titkosítót C-ben!
+        </para>
+         <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Caesar/blob/master/2.c">https://github.com/Matchbox1233/Caesar/blob/master/2.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Exor titkosító:
+    
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+
+    int main(int argc, char *argv[])
+    {
+        if(argc > 2)
+        {
+            if(strlen(argv[2])!=8)
+            {
+                printf("Bad key\n");
+                return -1;
+            }
+            FILE* fin = fopen(argv[1],"r");
+            if(fin==NULL)
+            {
+                printf("File doesn't exist.\n");
+                return -3;
+            }
+            else
+            {
+                char c;
+                int i=0;
+                while(!feof(fin))
+                {
+                    fscanf(fin,"%c",&c);
+                    c^=argv[2][i%strlen(argv[2])];
+                    printf("%c",c);
+                }
+                fclose(fin);
+            }
+
+        }
+        else 
+        {
+            printf("Használd: ./e fájlnév.txt kulcs\n");
+            return -2;
+        }
+        printf("\n");
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A program először ellenőrzi, hogy megfelelő mennyiségű argumentumot kapott e(argv), ha nem akkor kiírja, hogy hogyan kell megadni az agrumentumokat. A program ellenőrzi, még  hogy jó kulcsot kapott e a titkosításhoz, ha a kulcs nem áll nyolc karakterből, akkor kiírja, hogy: "Bad key".
+        </para>          
+        <para>
+            Majd a harmadik "if"-es részben ellenőrizzük a titkosítandó fájlt. Ezt úgy tesszük meg, hogy a "fin" nevű változóban eltároljuk a megadott szöveget, ha ez egyenlő nullával, akkor a program kiírja, hogy: "File doesen't exist". Ellenkező esetben egy "while" ciklus beolvassa a szöveget, és a kulcs megfelelő karakterével össze exorozza(^), így titkosítja a szöveget. Miután titkosította kiírja a titkkosított szöveget a terminálba.
+        </para>
+    </section>        
+    <section>
+        <title>Java EXOR titkosító</title>
+        <para>
+            Írj egy EXOR titkosítót Java-ban!
+        </para>
+         <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Caesar/blob/master/3.c">https://github.com/Matchbox1233/Caesar/blob/master/3.c</link>
+        </para>
+        <programlisting language = 'java'><![CDATA[Exor titkosító java-ban:
+    
+    import java.io.*;
+    import java.util.ArrayList;
+    import java.util.Scanner;
+    class exor
+    {
+        public static void main(String[] args)
+        {
+            FileInputStream fin=null;
+            FileOutputStream fout=null;
+            try
+            {
+                fin=new FileInputStream("tiszta.txt");
+                int c;
+                ArrayList<Integer> in_v = new ArrayList<Integer>();
+                ArrayList<Integer> out_v = new ArrayList<Integer>();
+                Scanner in = new Scanner(System.in);
+                System.out.println("Enter key:");
+                String key = in.nextLine();
+                if(key.length() !=9)
+                {
+                    System.out.println("Bad key");
+                    return;
+                }
+                while((c=fin.read())!=-1)
+                {
+                    in_v.add(c);
+                }
+                for(int i=0;i<in_v.size();i++)
+                {
+                    out_v.add(in_v.get(i)^key.charAt(i%9));
+                }
+                fout = new FileOutputStream("titkos.txt");
+                for(int i=0;i<out_v.size();i++)
+                {
+                    System.out.printf("%c",out_v.get(i));
+                }
+                
+            }
+            catch(Exception ex)
+            {
+
+            }
+            finally
+            {
+                try
+                {
+                    if(fin!=null) fin.close();
+                    if(fout!=null) fout.close();
+                }catch(Exception ex)
+                {
+
+                }
+            }
+        }
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>            
+        <para>
+            Először is létrehozunk egy "class exor" nevű osztályt. Megadjuk, hogy a "tiszta.txt" -t tratalmát a "fin" nevű változóba töltse be. Utána beszekeneljük, ezt a szkennelést a "Scanner in" nevű változóban tároljuk el. Ezután bekérjük a kulcsot a felhasználótól(Enter key), és eltároljuk a "String key" nevű változóban. Ha a kulcs több mint nyolc karakterből áll, akkor a program kiírja, hogy "Bad key". Ha a kulcs megfelelt, akkor exor(^) segítségével elkzedődik a titkosítás, ez a "for" ciklus addig megy, amíg el nem éri a beolvasott fájl végét(in_v.size). A titkosítás után a program kiírja a titkos szöveget a terminálba(titkos.txt). 
+        </para>
+    </section>        
+    <section>
+        <title>C EXOR törő</title>
+        <para>
+            Írj egy olyan C programot, amely megtöri az első feladatban előállított titkos szövegeket!
+        </para>
+         <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Caesar/blob/master/4.c">https://github.com/Matchbox1233/Caesar/blob/master/4.c</link>
+        </para>
+        <programlisting language = "c"><![CDATA[Exor törő:
+    
+    #define MAX_TITKOS 4096
+    #define OLVASAS_BUFFER 256
+    #define KULCS_MERET 8
+    #define _GNU_SOURCE
+
+    #include <stdio.h>
+    #include <unistd.h>
+    #include <string.h>
+
+    double
+    atlagos_szohossz (const char *titkos, int titkos_meret)
+    {
+        int sz = 0;
+        for (int i = 0; i < titkos_meret; ++i)
+            if (titkos[i] == ' ')
+                ++sz;
+
+        return (double) titkos_meret / sz;
+    }
+
+    int
+    tiszta_lehet (const char *titkos, int titkos_meret)
+    {
+        // a tiszta szoveg valszeg tartalmazza a gyakori magyar szavakat
+        // illetve az átlagos szóhossz vizsgálatával csökkentjük a
+        // potenciális töréseket
+
+        double szohossz = atlagos_szohossz (titkos, titkos_meret);
+
+        return szohossz > 6.0 && szohossz < 9.0
+               && strcasestr (titkos, "hogy") && strcasestr (titkos, "nem")
+               && strcasestr (titkos, "az") && strcasestr (titkos, "ha");
+
+    }
+
+    void
+    exor (const char kulcs[], int kulcs_meret, char titkos[], int titkos_meret, char *buffer)
+    {
+
+        int kulcs_index = 0;
+
+        for (int i = 0; i < titkos_meret; ++i)
+        {
+
+            buffer[i] = titkos[i] ^ kulcs[kulcs_index];
+            kulcs_index = (kulcs_index + 1) % kulcs_meret;
+
+        }
+
+    }
+
+    void
+    exor_tores (const char kulcs[], int kulcs_meret, char titkos[],
+                int titkos_meret)
+    {
+
+        char *buffer;
+
+        if ((buffer = (char *)malloc(sizeof(char)*titkos_meret)) == NULL)
+        {
+            printf("Memoria (buffer) faliora\n");
+            exit(-1);
+        }
+
+        exor (kulcs, kulcs_meret, titkos, titkos_meret, buffer);
+
+        if(tiszta_lehet (buffer, titkos_meret))
+        {
+          printf("Kulcs: [%c%c%c%c%c%c%c%c]\nTiszta szoveg: [%s]\n",
+                 kulcs[0],kulcs[1],kulcs[2],kulcs[3],kulcs[4],kulcs[5],kulcs[6],kulcs[7], buffer);      
+        }
+        
+        free(buffer);
+
+    }
+
+    int main (void)
+    {
+        char titkos[MAX_TITKOS];
+        char *p = titkos;
+        int olvasott_bajtok;
+
+        // titkos fajt berantasa
+        while ((olvasott_bajtok =
+                    read (0, (void *) p,
+                          (p - titkos + OLVASAS_BUFFER <
+                           MAX_TITKOS) ? OLVASAS_BUFFER : titkos + MAX_TITKOS - p)))
+            p += olvasott_bajtok;
+
+        // maradek hely nullazasa a titkos bufferben
+        for (int i = 0; i < MAX_TITKOS - (p - titkos); ++i)
+            titkos[p - titkos + i] = '\0';
+
+        // osszes kulcs eloallitasa
+        for (int ii = '0'; ii <= '9'; ++ii)
+            for (int ji = '0'; ji <= '9'; ++ji)
+                for (int ki = '0'; ki <= '9'; ++ki)
+                    for (int li = '0'; li <= '9'; ++li)
+                        for (int mi = '0'; mi <= '9'; ++mi)
+                            for (int ni = '0'; ni <= '9'; ++ni)
+                                for (int oi = '0'; oi <= '9'; ++oi)
+                                    for (int pi = '0'; pi <= '9'; ++pi)
+                                    {
+
+                                        char *kulcs;
+
+                                        if ((kulcs = (char *)malloc(sizeof(char)*KULCS_MERET)) == NULL)
+                                        {
+                                            printf("Memoria (kulcs) faliora\n");
+                                            exit(-1);
+                                        }
+
+                                        kulcs[0] = ii;
+                                        kulcs[1] = ji;
+                                        kulcs[2] = ki;
+                                        kulcs[3] = li;
+                                        kulcs[4] = mi;
+                                        kulcs[5] = ni;
+                                        kulcs[6] = oi;
+                                        kulcs[7] = pi;
+
+                                        exor_tores (kulcs, KULCS_MERET, titkos, p - titkos);
+
+                                        free(kulcs);
+                                    }
+        return 0;
+    }
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A program elő részében(atlagos_szohossz) a program megállpaítja, hogy mekkora a visszafejtett szavak átlagos hossza.
+        </para>
+        <para>
+            A második részben(tiszta_lehet) megvizsgálja a program, hogy visszafejtett szöveg tényleg lehet az, amit a program visszafejtett. Ellenőrzi a szöveget, az átlagos szóhossz alapján, hogy az átlagosszóhossz hat és kilenc közés essen, és hogy tartalmazaz e a zöveg valamelyik szót a megadottakból: hogy, az, nem, ha.
+        </para>    
+        <para>
+            A harmadik részben(exor) történik a visszafejtés az exorral(^) a megadott kulcsok segítségével. 
+        </para>
+        <para>
+            A negyedik részbe(exor_tores) meghívjuk az "exor", és a "tiszta_lehet" függvényeket, ha ezeknek az értékei igazak, akkor a program kiírja a megoldást. 
+        </para>
+        <para>
+            Az utolsó részben(int main) beolvassuk azt a szöveget, amit szeretnénk feltörni. A program megvizsgálja az összes kulcsot a nyolc egybeágyazott "for" ciklussal.
+        </para>
+    </section>        
+    <section>
+        <title>Neurális OR, AND és EXOR kapu</title>
+        <para>
+            A feladatot R-ben készítsd el.
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://youtu.be/Koyw6IH5ScQ">https://youtu.be/Koyw6IH5ScQ</link>
+        </para>
+         <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Caesar/blob/master/5.R">https://github.com/Matchbox1233/Caesar/blob/master/5.R</link>
+        </para>
+        <para>
+            A feladat megoldásában segítettem: Boros István.
+        </para>
+        <programlisting language="R"><![CDATA[Neurális OR, AND és EXOR kapu
+
+    library(neuralnet)
+
+    a1    <- c(0,1,0,1)
+    a2    <- c(0,0,1,1)
+    OR    <- c(0,1,1,1)
+
+    or.data <- data.frame(a1, a2, OR)
+
+    nn.or <- neuralnet(OR~a1+a2, or.data, hidden=0, linear.output=FALSE, stepmax = 1e+07, threshold = 0.000001)
+
+    plot(nn.or)
+
+    compute(nn.or, or.data[,1:2])
+
+
+    a1    <- c(0,1,0,1)
+    a2    <- c(0,0,1,1)
+    OR    <- c(0,1,1,1)
+    AND   <- c(0,0,0,1)
+
+    orand.data <- data.frame(a1, a2, OR, AND)
+
+    nn.orand <- neuralnet(OR+AND~a1+a2, orand.data, hidden=0, linear.output=FALSE, stepmax = 1e+07, threshold = 0.000001)
+
+    plot(nn.orand)
+
+    compute(nn.orand, orand.data[,1:2])
+
+
+
+    a1      <- c(0,1,0,1)
+    a2      <- c(0,0,1,1)
+    EXOR    <- c(0,1,1,0)
+
+    exor.data <- data.frame(a1, a2, EXOR)
+
+    nn.exor <- neuralnet(EXOR~a1+a2, exor.data, hidden=0, linear.output=FALSE, stepmax = 1e+07, threshold = 0.000001)
+
+    plot(nn.exor)
+
+    compute(nn.exor, exor.data[,1:2])
+
+
+
+    a1      <- c(0,1,0,1)
+    a2      <- c(0,0,1,1)
+    EXOR    <- c(0,1,1,0)
+
+    exor.data <- data.frame(a1, a2, EXOR)
+
+    nn.exor <- neuralnet(EXOR~a1+a2, exor.data, hidden=c(6, 4, 6), linear.output=FALSE, stepmax = 1e+07, threshold = 0.000001)
+
+    plot(nn.exor)
+
+    compute(nn.exor, exor.data[,1:2])
+ 
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            Betöltjük a neurális csomagot(library(neuralnet)). Az "a1"-be berakom a "0 1 0 1"-et, az "a2"-be pedig a "0 0 1 1"-et. Az "a1"-et és az "a2"-t logikai vagy művelettel megoldjuk, és így létrejön az "OR" tömb, amibe az eredmények kerülnek. Ezekből adatot csinálunk(or.data). A program megalkotja a neurális hálót, a "neuralnet" segístégével, és így beállítja a súlyokat. 
+        </para>
+        <para>
+            A következőben, már az "a1"-et és az "a2"-t logikai és művelettel is megoldjuk, ennek az eredménye kerül az "AND" nevű tömbbe. A program ebből is adatot(orand.data), majd neurális hálót készít(neuralnet), az elkészített hálót hozzá illeszti az előzőhöz.
+        </para>            
+        <para>
+            A harmadik részben exorozzuk az "a1" és az "a2" értékeit. Ott lesz az érték egy, ahol az értékek különböznek, például:  ha "a1"-ben egy az érték, és "a2"-ben pedig kettő ugyanazon a helyen, akkor az exor értéke egy lesz. Ha "a1" és "a2" értéke azonos helyen ugyanannyi, akkor az exor értéke nulla lesz.  A program itt is adatot készít, majd ebből neurális hálót. Ez az exoros rész különbözik az előzőektől, mert itt a hibák száma elég nagy. Ezt a következő részben oldjuk meg.
+        </para>
+        <para>
+            Az utolsó rész, megegyezik az előzővel, csak itt sokkal kevesebb hibát ad a program. Annyi a változás, hogy megadunk rejtett neuronaka(hidden=c(6, 4, 6)), amik segítségével a hibák száma csökken.
+        </para>
+    </section>        
+    <section>
+        <title>Hiba-visszaterjesztéses perceptron</title>
+        <para>
+            C++
+        </para>
+         <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Caesar/blob/master/6.cpp">https://github.com/Matchbox1233/Caesar/blob/master/6.cpp</link>
+        </para>
+        <programlisting language = "c++"><![CDATA[Hiba - visszaterjesztési preceptron:
+    
+    #include "perceptron.hpp"
+    #include <png++/png.hpp>
+
+    using namespace std;
+
+    int main(int argc, char *argv[])
+    {
+        if(argc!=2)
+        {
+            cout<<"Így használd: ./perc bemenet.png"<<endl;
+            return -1;
+        }
+        png::image<png::rgb_pixel> png_img(argv[1]);
+        int s = png_img.get_width()*png_img.get_height();
+
+        Perceptron* p = new Perceptron(3,s,256,1);
+
+        double* image = new double[s];
+
+        for(int i=0;i<png_img.get_width();i++)
+        {
+            for(int j=0;j<png_img.get_height();j++)
+            {
+                image[i*png_img.get_width()+j]=png_img[j][i].red;
+            }
+        }
+
+        double val = (*p)(image);
+        cout<<val<<endl;
+        delete [] image;
+        delete p;
+        return 0;
+    }       
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A program először ellenőrzi az argumentumok számát(argc). Ha az argumentumok száma kettő, akkor a program tovbább fut, ha nem akkor kilép, és kiírja a termiinálba, hogy hogyan is futtasuk ezt a programot. Ezután beolvassa azt a fájlt, amit megadtunk neki, ebben az esetben ennek képnek kell lennie(.png). A következő sorban létrehozunk egy "perceptron"-t négy rétegű neurális hálóval, amibe eltároljuk a kép pixeleinek a számát például(256). Majd létrehozunk egy tömböt(double* image) amibe beletöltjük a kép vörös pixeleinek az értékét. A "for" ciklusban meghívjuk a "perceptront", és az feldolgozz a képet. 
+        </para>            
+    </section>              
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                

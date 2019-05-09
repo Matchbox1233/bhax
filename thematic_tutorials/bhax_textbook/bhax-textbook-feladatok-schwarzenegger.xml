@@ -1,0 +1,198 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Schwarzenegger!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>Szoftmax Py MNIST</title>
+        <para>
+            Python
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://youtu.be/j7f9SkJR3oc">https://youtu.be/j7f9SkJR3oc</link>      
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Schwarzenegger/blob/master/1.py">https://github.com/Matchbox1233/Schwarzenegger/blob/master/1.py</link>
+        </para>
+        <programlisting language = "Python"><![CDATA[
+
+    import tensorflow as tf
+    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+    x_train.shape
+
+    # Reshaping the array to 4-dims so that it can work with the Keras API
+    x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
+    x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
+    input_shape = (28, 28, 1)
+    # Making sure that the values are float so that we can get decimal points after division
+    x_train = x_train.astype('float32')
+    x_test = x_test.astype('float32')
+    # Normalizing the RGB codes by dividing it to the max RGB value.
+    x_train /= 255
+    x_test /= 255
+    print('x_train shape:', x_train.shape)
+    print('Number of images in x_train', x_train.shape[0])
+    print('Number of images in x_test', x_test.shape[0])
+
+    # Importing the required Keras modules containing model and layers
+    from keras.models import Sequential
+    from keras.layers import Dense, Conv2D, Dropout, Flatten, MaxPooling2D
+    # Creating a Sequential Model and adding the layers
+    model = Sequential()
+    model.add(Conv2D(28, kernel_size=(3,3), input_shape=input_shape))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Flatten()) # Flattening the 2D arrays for fully connected layers
+    model.add(Dense(128, activation=tf.nn.relu))
+    model.add(Dropout(0.2))
+    model.add(Dense(10,activation=tf.nn.softmax))
+
+    model.compile(optimizer='adam', 
+                  loss='sparse_categorical_crossentropy', 
+                  metrics=['accuracy'])
+    model.fit(x=x_train,y=y_train, epochs=10)
+
+    model.evaluate(x_test, y_test)
+
+    image_index = 4444
+    plt.imshow(x_test[image_index].reshape(28, 28),cmap='Greys')
+    pred = model.predict(x_test[image_index].reshape(1, 28, 28, 1))
+    print(pred.argmax())
+    print(y_test[image_index])
+
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A program lényege, hogy kézzel rajzolt számokat ismerjen fel. A programben először importáljuk a "tensorflow"-t(import tensorflow as tf). A "tensorflow" segítségével töltjük be az MNIST adatbázisban tárolt adatokat. Az MNIST adatbázisban található képeket, a hozzá tartozó címkéket, illetve a tesztképeket és címkéket eltároljuk az "x_train", "y_train", "x_test", "y_test" változókban( x_train = x_train.reshape), (x_test = x_test.reshape). A következőkben az "x_train" és "x_test" értékeit konvertáljuk "float" típusúra(x_train = x_train.astype('float32'). Ezek után normalizáljuk az RGB értékeket. A neurális háló felépítéséhez szükséges hat modult hozzáadnunk a programhoz(model.add...). A hozzáadás után létrehozzuk a hálót, és fel is tanítjuk. Végül pedig megnézzük a háló tudását, ebben segítségünkre vannak a tesztképek és címkék.
+        </para>
+    </section>        
+
+    <section>
+        <title>Mély MNIST</title>
+        <para>
+            Python            
+        </para>
+         <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Schwarzenegger/blob/master/2.py">https://github.com/Matchbox1233/Schwarzenegger/blob/master/2.py</link>
+        </para>
+        <para>
+            A feladat megolsásában segített: Petrus József Tamás
+        </para>
+        <programlisting language = "Python"><![CDATA[
+
+    from __future__ import print_function
+
+    from tensorflow.examples.tutorials.mnist import input_data
+    mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
+
+    import tensorflow as tf
+
+    def weight_variable(shape):
+      initial = tf.truncated_normal(shape, stddev=0.1)
+      return tf.Variable(initial)
+
+    def bias_variable(shape):
+      initial = tf.constant(0.1, shape=shape)
+      return tf.Variable(initial)
+
+    def conv2d(x, W):
+      return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
+
+    def max_pool_2x2(x):
+      return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
+                            strides=[1, 2, 2, 1], padding='SAME')
+
+    # Input layer
+    x  = tf.placeholder(tf.float32, [None, 784], name='x')
+    y_ = tf.placeholder(tf.float32, [None, 10],  name='y_')
+    x_image = tf.reshape(x, [-1, 28, 28, 1])
+
+    # Convolutional layer 1
+    W_conv1 = weight_variable([5, 5, 1, 32])
+    b_conv1 = bias_variable([32])
+
+    h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
+    h_pool1 = max_pool_2x2(h_conv1)
+
+    # Convolutional layer 2
+    W_conv2 = weight_variable([5, 5, 32, 64])
+    b_conv2 = bias_variable([64])
+
+    h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
+    h_pool2 = max_pool_2x2(h_conv2)
+
+    # Fully connected layer 1
+    h_pool2_flat = tf.reshape(h_pool2, [-1, 7*7*64])
+
+    W_fc1 = weight_variable([7 * 7 * 64, 1024])
+    b_fc1 = bias_variable([1024])
+
+    h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
+
+    # Dropout
+    keep_prob  = tf.placeholder(tf.float32)
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
+
+    # Fully connected layer 2 (Output layer)
+    W_fc2 = weight_variable([1024, 10])
+    b_fc2 = bias_variable([10])
+
+    y = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2, name='y')
+
+    # Evaluation functions
+    cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
+
+    correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32), name='accuracy')
+
+    # Training algorithm
+    train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
+
+    # Training steps
+    with tf.Session() as sess:
+      sess.run(tf.initialize_all_variables())
+
+      max_steps = 1000
+      for step in range(max_steps):
+        batch_xs, batch_ys = mnist.train.next_batch(50)
+        if (step % 100) == 0:
+          print(step, sess.run(accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
+        sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys, keep_prob: 0.5})
+      print(max_steps, sess.run(accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
+
+]]></programlisting>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A program elején importáljuk a szükséges modulokat(pl:tensorflow). Utána definiálunk négy függvényt(ezeket a "def" jelzi), ezek a függvények a program rövidítésében segítenek. A függvény definiálások után létrehozzuk a neurális háló rétegeit(ezt jelzi a "layer" szó), ebben a kódban öt rétegű a neurális háló. A hálók megadása után meghatározzuk, hogy milyen módon akarjuk kiértékelni a bemenetet. Majd megadjuk, hogy milyen algoritmussal tanítjuk a hálót(Training algorithm, Training steps). A kód végére pedog megadjuk, hogy minden századik iterációban leteszteljük a háló tudását.    
+        </para>
+    </section>        
+                  
+    <section>
+        <title>Minecraft-MALMÖ</title>
+        <para>
+            A feladdat megoldásában segített: Petrus József Tamás
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://youtu.be/bAPSu3Rndi8">https://youtu.be/bAPSu3Rndi8</link>      
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Schwarzenegger/blob/master/3.py">https://github.com/Matchbox1233/Schwarzenegger/blob/master/3.py</link>                 
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A program célja, hogy Steve ne akadjon el a pályán öt percen keresztül. Steve az előtte lévő 12 blokkot vizsgálja. Adottak feltételek, ha ezek megfelelnek, akkor ugrik, vagy irányt vált egy másik irányba. Steve-nek még sokat kell fejlődnie, mert a láva tavakat és a szakadékokat még nem tudja kikerülni. 
+        </para>
+        <para>
+            A programba először importáljuk a szükséges modulokat, illetve a "MALMÖ API"-t. Az importálások után definiálunk pár függvényt. A "restart_minecraft" föggvény feladata, hogy a mission lefutása után a prgram tudja fogadni a következő missiont. A "run" függvényben adjuk meg a pontos missiont illetve az ez alatti vezérést. A "missionXML"-ben van megadva Steve kiindulási helyzete, a világ generálásának szabályai és, hogy figyelje a körülötte klévő dolgokat. Ezután megadjuk a mission hosszát időben(my_mission.timeLimitInSeconds( 300 )), ez azt jelenti, hogy háromszáz másodpercig fog futni, valamint megadjuk a Minecraft felbontását is, ami 640x480-as lesz(my_mission.requestVideo( 640, 480 )). A következőkben megadjuk, hogy a Minecraft kliens milyen porton és címen érhető el, hogy a program tudjon csatlakozni. Következik két "while" ciklus. Az elsőben a ciklus addig vár, amíg a kliens készen áll a program általi irányítást fogadni. A másodikban van Steve irányítása, ez több elágazásból áll. Az első kettőben megadjuk, hogy Steve fel tudjon vagy át tudjon ugrani egy akadályt, és ne egyfolytában ugráljon. A harmadik elágazásban van a jobbra, ballra fordulás. A negyedik elágazásban Steve eldönti, hogy melyik égtáj felé nézzen. A "bloccks" nevű kétdimenziós tömbbe töltjük a megvizsgált blokkok nevét. Az alapján, hogy Steve melyik égtáj felé néz megvizsgálja az előtte lévő blokkokat, ez alapján dönt, hogy ugorjon vagy forduljon. 
+        </para>
+    </section>        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+</chapter>                

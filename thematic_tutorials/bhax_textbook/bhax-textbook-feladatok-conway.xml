@@ -1,0 +1,99 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Conway!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>Hangyaszimulációk</title>
+        <para>
+            Írj Qt C++-ban egy hangyaszimulációs programot, a forrásaidról utólag reverse engineering jelleggel
+            készíts UML osztálydiagramot is!
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/Myrmecologist?fbclid=IwAR28UB3OxrN8YDt07Tzs2AZY-jJNiCGYkG-fYlLgwqk-YyOyErWjrgrpJPg">https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/Myrmecologist?fbclid=IwAR28UB3OxrN8YDt07Tzs2AZY-jJNiCGYkG-fYlLgwqk-YyOyErWjrgrpJPg</link>
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2018/10/10/myrmecologist">https://bhaxor.blog.hu/2018/10/10/myrmecologist</link>
+        </para>
+        <para>
+            A feladat megoldásában segítettem: Boros István.
+        </para>
+        <para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="Pictures/AntsStuff.png" scale="50"/>
+            </imageobject>
+        </mediaobject>
+        </para>
+        <para>
+            A Diagramm magyarázata:
+        </para>
+        <para>
+            Ha "+" jel van egy tag előtt, akkor az publikus, tehát látható egy másik osztályból is, ha "-" jel van akkor nem látható.
+        </para>
+        <para>
+            Négy osztályból áll a kód: Ant, Typdef, AntWin, AntThread. Az "Ant" osztályban van a hangya tulajdonságai. Az "x" jelöli az sort, az "y" pedig az oszlopot, ebből a két számból megtuduk a hangya pontos helyét. Ebben a részben még megadjuk a hangya irányát is(dir).
+        </para>
+        <para>
+            Az "AntWin" osztályban található a felugró ablak szélessége(width), és magassága(height). Ebben az osztályba meghívjuk a "AntThread" osztályt, és más pointerek által jelölt kódrészeket. Itt adjuk meg a cellák méretét(cellHeight, cellWidth). Valamint a bllentyűzet eseményeket(KeyPressEvent) is itt dolgozzuk fel. Az ablak bezárását(CloseEvent) is itt írjuk bele a prgramba, és magát a rajzolást(paintEvent) is. A "+AntWin()" függvény egy konstruktor és az építi fel az objektumot, a "+~AntWin()" függvény pedig a destruktor.  
+        </para>
+        <para>
+            A "Typdef" rész, definiálja az "Ants" típust.
+        </para>
+        <para>
+            Az "AntThread" osztály meg van hívva az AntWin osztályban. Itt adjuk meg a hangyáknak a követési útvonalat. Ebben a részben megszámoljuk a maximális hangyaszámot egy cellában(cellAntMax) és megadjuk a feromont(ezt követik a hangyák(pheromone)). Ebben a részben mozgatjuk(moveAnts) a hangyákat a feromon(setPheromone) után.
+        </para>            
+    </section>        
+    <section>
+        <title>Java életjáték</title>
+        <para>
+            Írd meg Java-ban a John Horton Conway-féle életjátékot, 
+            valósítsa meg a sikló-kilövőt!
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Conway/blob/master/2.java">https://github.com/Matchbox1233/Conway/blob/master/2.java</link>        
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>            
+    </section>        
+    <section>
+        <title>Qt C++ életjáték</title>
+        <para>
+            Most Qt C++-ban!
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/Matchbox1233/Conway/blob/master/3.cpp">https://github.com/Matchbox1233/Conway/blob/master/3.cpp</link>  
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A programot az alábbi paranccsal lehet lefordítani: "g++ 3.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system". Megnyitni a szokásos módon lehet. Amikor a program elindult, akkor kézzel kell rajzolnunk egy alakzatot, majd nyomni egy "e" betűt, hogy a program elkezdje az "életjátékot"
+        </para>
+        <para>
+            Conway-féle életjáték kis háttértörténete: Az életjátékot John Conway találta ki, aki Cambridge Egyetem matematikus. Ez egy nullszemélyes játék, annyi a szerepe, hogy az ember megad egy kezdőalakot, és azután elindul a játék. Ez a játék matematikailag a sejtautómaták közé tartozik.
+        </para>
+        <para>
+            A program elég sok osztályből áll, és persze egy fő részből(main). Az első osztály a "Grid" nevet kapta, ebben található egy "public" rész, ami meghatározza a program kezdetén lévő ablak nagyságát. Aztán a "public" rész után jön a "void draw", ez a "void" felelős az ablak megrajzolásáért, ami megjelenik. Ez az megjelenített ablak négyzetrácsos lesz. A második osztály a "Square" nevet kapta. Ez a rész felelős azért, hogy ha rákattintunk egy négyzetre a rácshálón, akkor kitöltse fekete színnel. A harmadik rész az egy vektor lesz, ezzel a vektorral mozgatjuk a kijelölt négyzeteket a játékszabálynak megfelelően, ami a következő: Egy sejttel egy körben három dolog történhet. Az első, ha a sejt túléli a kört(ha két vagy három szomszédja van). A második, ha a sejt elpusztul a körben(ha kettőnél kevesebb, vagy háromnál több szomszédja van). A harmadik pedig, ha egy új sejt születik(ha a környezetében pontosan három sejt található). Bővebb információ az életjáték szabályairól: <link xlink:href="https://hu.wikipedia.org/wiki/%C3%89letj%C3%A1t%C3%A9k">https://hu.wikipedia.org/wiki/%C3%89letj%C3%A1t%C3%A9k</link> A negyedik rész a "void killall", itt felszabadítjuk az előző részben(vector) használt pointereket, így nem terhelünk felesleges memóriát a továbbiakban. Az ötödik rész a fő rész a "main". Ebben a részben megadjuk a megnyíló ablak paramétereit. Aztán a "push_back" -el hozáadunk egy elemet a "vector" -hoz. A "while" függvény addig megy, amíg az ablak nyitva van. Először "letisztítja" a képernyőt. Ha nem kattintunk egy négyzetre sem, akkor bezárdóik az ablak, ha viszont kattintunk a bal egérgombbal, akkor kiszinezi a négyzetet. Ezen kívül, ha megnyomjuk a "Q"-t akkor bezáródik a program, ha a "C"-t nyomjuk meg akkor "megöli" az összes négyzetet, és ha "E"-t nyomunk, akkor meg szerkesztő módba lépünk át. Végül meghívjuk a "draw" osztályt a "main"-be, és "update"-jük a négyzeteket.
+        </para>          
+    </section>        
+    <section>
+        <title>BrainB Benchmark</title>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/nbatfai/esport-talent-search?fbclid=IwAR0n58sBL-LrZ5N9rpC-zftv0CeiWnwqJYBRFmVHZI5qfh11x3xJDaXI0Ks">https://github.com/nbatfai/esport-talent-search?fbclid=IwAR0n58sBL-LrZ5N9rpC-zftv0CeiWnwqJYBRFmVHZI5qfh11x3xJDaXI0Ks</link>  
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat:
+        </para>
+        <para>
+            A kód elég öszetett, hiszen nyolc fájlól áll. Ezek között van egy "használíti utasítás" ez a "README.md", valamint egy licensz információ(LICENSE). A program fő részre a "main.cpp"-ben található, és ehhez kapcsolódik a több kódrészlet, amik külön állományokban vannak elhelyezeve a jobb átláthatóság érdekében.
+        </para>    
+        <para>
+            A program elndításához, és futatásához érdemes elolvasni a "README" szöveges dokumentumot. A program célja, hogy fejlessze a koncentrációs és a követési képességeinket. Amikor elindítjuk ezt a programot először megjelenik négy darab négyzet, és mindegyiknek a közepén van egy kék kör. Ezen a kék körön kell tartanunk az egeret lenyomva(bal egér gomb). A négyzet mozogni fog, ha sikeresen rajta tartjuk az egeret a kék körön, akkor újabb négyzetek jelennek meg, ha viszont nem sikerül, akkor pedig csökken a négyzetek száma. A követés egyre nehezbb lesz, mert a sok négyzet egyre gyakrabban, fogja egymás fedni, és akkor már elég nehéz nyomon követni a mi kis kék körünket.
+        </para>            
+    </section>        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                
